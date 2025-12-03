@@ -4,6 +4,9 @@ import { getProducts } from '@/lib/woocommerce/api';
 import { WCProduct } from '@/types/woocommerce';
 import Link from 'next/link';
 
+// Force dynamic rendering to avoid build-time API calls
+export const dynamic = 'force-dynamic';
+
 export default async function Home() {
   // Récupérer les produits depuis WooCommerce
   let products: WCProduct[] = [];

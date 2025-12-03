@@ -5,6 +5,9 @@ import { WCProduct } from '@/types/woocommerce';
 import Image from 'next/image';
 import Link from 'next/link';
 
+// Force dynamic rendering to avoid build-time API calls
+export const dynamic = 'force-dynamic';
+
 export const metadata = {
   title: 'Qui sommes nous - Sunset Rider Shop',
   description: 'Découvrez l\'histoire et les valeurs de Sunset Rider',
