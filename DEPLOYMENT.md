@@ -182,6 +182,86 @@ Ouvrir `http://localhost:3000` dans votre navigateur.
    sudo certbot --nginx -d new.sunsetridershop.com
    ```
 
+### Option C : Déploiement sur AWS Amplify
+
+1. **Créer une application sur AWS Amplify** :
+   - Se connecter à la console AWS : https://console.aws.amazon.com/amplify/
+   - Cliquer sur "Get Started" dans la section Amplify Hosting
+   - Sélectionner "GitHub" comme source
+   - Autoriser AWS Amplify à accéder à votre compte GitHub
+   - Sélectionner le repository `sunset-front` et la branche `main`
+
+2. **Configurer le build** :
+   - AWS Amplify détecte automatiquement Next.js
+   - Le fichier `amplify.yml` sera créé automatiquement avec :
+   ```yaml
+   version: 1
+   frontend:
+     phases:
+       preBuild:
+         commands:
+           - npm ci
+       build:
+         commands:
+           - npm run build
+     artifacts:
+       baseDirectory: .next
+       files:
+         - '**/*'
+     cache:
+       paths:
+         - node_modules/**/*
+   ```
+
+3. **Configurer les variables d'environnement** :
+   - Dans la console Amplify, aller dans votre application
+   - Cliquer sur "Environment variables" dans le menu de gauche
+   - Cliquer sur "Manage variables"
+   - Ajouter les variables suivantes :
+
+   | Clé | Valeur |
+   |-----|--------|
+   | `WOOCOMMERCE_URL` | `https://sunsetridershop.com` |
+   | `WOOCOMMERCE_CONSUMER_KEY` | `ck_votre_clé` (voir ci-dessous) |
+   | `WOOCOMMERCE_CONSUMER_SECRET` | `cs_votre_secret` (voir ci-dessous) |
+   | `NEXT_PUBLIC_WORDPRESS_URL` | `https://sunsetridershop.com` |
+   | `WORDPRESS_GRAPHQL_ENDPOINT` | `https://sunsetridershop.com/graphql` |
+
+4. **Obtenir les clés WooCommerce** :
+   - Se connecter à WordPress : https://sunsetridershop.com/wp-admin
+   - Aller dans WooCommerce → Réglages → Avancé → REST API
+   - Cliquer sur "Ajouter une clé"
+   - Description : "Next.js Frontend"
+   - Utilisateur : Sélectionner votre compte admin
+   - Permissions : **Lecture** (suffisant pour un frontend)
+   - Cliquer sur "Générer la clé API"
+   - **Important** : Copier immédiatement la Consumer Key et Consumer Secret (ils ne seront plus affichés)
+   - Coller ces valeurs dans les variables d'environnement Amplify
+
+5. **Déployer** :
+   - Cliquer sur "Save and deploy"
+   - AWS Amplify va builder et déployer automatiquement
+   - Une URL sera générée (ex: `https://main.d1234abcd.amplifyapp.com`)
+
+6. **Configurer un domaine personnalisé** (optionnel) :
+   - Dans Amplify, aller dans "Domain management"
+   - Cliquer sur "Add domain"
+   - Entrer `sunsetridershop.com`
+   - Ajouter le sous-domaine `new.sunsetridershop.com`
+   - Suivre les instructions pour configurer les enregistrements DNS chez OVH
+
+7. **Redéploiement automatique** :
+   - Chaque push sur la branche `main` déclenchera automatiquement un nouveau build
+   - Vous pouvez voir les logs de build dans la console Amplify
+
+**Avantages d'AWS Amplify** :
+- ✅ Déploiement automatique à chaque push
+- ✅ Prévisualisation des branches
+- ✅ SSL/HTTPS automatique
+- ✅ CDN global intégré
+- ✅ Scaling automatique
+- ✅ Rollback facile vers versions précédentes
+
 ## Étape 4 : Configuration DNS chez OVH
 
 1. Se connecter à votre espace client OVH
