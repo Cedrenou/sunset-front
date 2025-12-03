@@ -1,12 +1,13 @@
 import Layout from '@/components/layout/Layout';
 import ProductCard from '@/components/ui/ProductCard';
 import { getProducts } from '@/lib/woocommerce/api';
+import { WCProduct } from '@/types/woocommerce';
 import Link from 'next/link';
 
 export default async function Home() {
   // Récupérer les produits depuis WooCommerce
-  let products = [];
-  let error = null;
+  let products: WCProduct[] = [];
+  let error: string | null = null;
 
   try {
     const productsData = await getProducts(8);

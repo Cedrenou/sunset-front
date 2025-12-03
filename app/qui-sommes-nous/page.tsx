@@ -1,6 +1,7 @@
 import Layout from '@/components/layout/Layout';
 import ProductCard from '@/components/ui/ProductCard';
 import { getProducts } from '@/lib/woocommerce/api';
+import { WCProduct } from '@/types/woocommerce';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -11,7 +12,7 @@ export const metadata = {
 
 export default async function QuiSommesNousPage() {
   // Récupérer les produits pour la section dynamique
-  let products = [];
+  let products: WCProduct[] = [];
   try {
     const productsData = await getProducts(6);
     products = productsData.nodes || [];
