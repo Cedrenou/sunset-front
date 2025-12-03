@@ -77,10 +77,13 @@ export async function getProducts(perPage = 12, page = 1) {
       status: 'publish',
     });
 
+    // S'assurer que products est bien un tableau
+    const productsArray = Array.isArray(products) ? products : [];
+
     return {
-      nodes: products.map(convertRestProductToGraphQL),
+      nodes: productsArray.map(convertRestProductToGraphQL),
       pageInfo: {
-        hasNextPage: products.length === perPage,
+        hasNextPage: productsArray.length === perPage,
         endCursor: page.toString(),
       },
     };
